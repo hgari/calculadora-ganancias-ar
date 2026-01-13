@@ -1,0 +1,133 @@
+{
+  "año": 2026,
+  "periodo": "Enero-Junio 2026",
+  "descripcion": "Deducciones oficiales AFIP/ARCA actualizadas con IPC 11.73%",
+  "gni_mensual": 364646,
+  "gni_anual": 4375752,
+  "deduccion_especial_mensual": 2017462,
+  "deduccion_especial_anual": 24209544,
+  "conyuge_mensual": 343397,
+  "conyuge_anual": 4120764,
+  "conyuge_requisito_ingreso_maximo": 4375752,
+  "hijo_mensual": 173179,
+  "hijo_anual": 2078148,
+  "hijo_incapacitado_mensual": 346358,
+  "hijo_incapacitado_anual": 4156296,
+  "deducciones_opcionales": {
+    "alquiler_inquilino": {
+      "nombre": "Alquiler de vivienda (inquilino)",
+      "descripcion": "40% del alquiler pagado con contrato y factura. No ser propietario.",
+      "porcentaje_deducible": 0.40,
+      "tope_anual": 4375752,
+      "requiere_factura": true,
+      "tooltip": "Se deduce el 40% del monto de alquiler con contrato registrado. Tope anual $4.375.752"
+    },
+    "alquiler_reli": {
+      "nombre": "Alquiler con RELI",
+      "descripcion": "10% del monto mensual para propietarios e inquilinos con RELI",
+      "porcentaje_deducible": 0.10,
+      "tope_anual": null,
+      "tooltip": "10% del alquiler para quienes estén inscriptos en RELI. Sin tope adicional."
+    },
+    "medicina_prepaga": {
+      "nombre": "Medicina Prepaga / Obra Social",
+      "descripcion": "100% de lo abonado. Comparte tope del 5% con gastos médicos.",
+      "porcentaje_deducible": 1.0,
+      "tope_porcentaje_ganancia_neta": 0.05,
+      "comparte_tope_con": "gastos_medicos",
+      "tooltip": "Se deduce el 100% de la cuota de prepaga. Tope conjunto con gastos médicos: 5% de la ganancia neta anual."
+    },
+    "gastos_medicos": {
+      "nombre": "Gastos Médicos (honorarios)",
+      "descripcion": "40% de honorarios médicos facturados sin reintegro. NO incluye medicamentos.",
+      "porcentaje_deducible": 0.40,
+      "tope_porcentaje_ganancia_neta": 0.05,
+      "comparte_tope_con": "medicina_prepaga",
+      "requiere_factura": true,
+      "tooltip": "40% de honorarios médicos sin reintegro. Excluye medicamentos. Tope conjunto con prepaga: 5% de ganancia neta anual."
+    },
+    "seguro_vida": {
+      "nombre": "Seguros de Vida",
+      "descripcion": "Primas de seguros de vida",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": 641000,
+      "nota": "Valor 2025, pendiente actualización ARCA",
+      "tooltip": "100% de primas de seguro de vida. Tope anual: $641.000 (independiente del seguro de retiro)."
+    },
+    "seguro_retiro": {
+      "nombre": "Seguros de Retiro Privados",
+      "descripcion": "Primas de seguros de retiro. Tope independiente del seguro de vida.",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": 641000,
+      "nota": "Valor 2025, pendiente actualización ARCA",
+      "tooltip": "100% de primas de seguro de retiro. Tope anual: $641.000 (independiente del seguro de vida)."
+    },
+    "gastos_educativos": {
+      "nombre": "Gastos Educativos",
+      "descripcion": "40% de gastos educativos de hijos menores de 24 años (cuotas, transporte, comedor, útiles, uniformes)",
+      "porcentaje_deducible": 0.40,
+      "tope_anual": 1750301,
+      "requisito_edad_hijos": 24,
+      "tooltip": "40% de gastos educativos (cuotas, transporte, comedor, útiles, uniformes) de hijos < 24 años. Tope anual: $1.750.301"
+    },
+    "servicio_domestico": {
+      "nombre": "Servicio Doméstico",
+      "descripcion": "Sueldos y contribuciones de empleados domésticos",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": 4375752,
+      "tooltip": "100% de sueldos y contribuciones patronales de servicio doméstico. Tope anual: $4.375.752 (equivalente GNI)."
+    },
+    "intereses_hipotecarios": {
+      "nombre": "Intereses Hipotecarios",
+      "descripcion": "Intereses de crédito hipotecario para casa habitación",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": 20000,
+      "nota": "Tope congelado hace años",
+      "tooltip": "100% de intereses hipotecarios de casa habitación. Tope anual: $20.000 (congelado)."
+    },
+    "donaciones": {
+      "nombre": "Donaciones",
+      "descripcion": "Donaciones a entidades reconocidas por ARCA (deben ser bancarizadas)",
+      "porcentaje_deducible": 1.0,
+      "tope_porcentaje_ganancia_neta": 0.05,
+      "requiere_bancarizacion": true,
+      "tooltip": "100% de donaciones bancarizadas a entidades reconocidas. Tope: 5% de ganancia neta anual."
+    },
+    "gastos_sepelio": {
+      "nombre": "Gastos de Sepelio",
+      "descripcion": "Gastos de sepelio",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": 996,
+      "nota": "Tope congelado",
+      "tooltip": "100% de gastos de sepelio. Tope anual: $996 (congelado)."
+    },
+    "impuesto_debitos_creditos": {
+      "nombre": "Impuesto Débitos/Créditos Bancarios",
+      "descripcion": "33% del impuesto a débitos y créditos bancarios pagado",
+      "porcentaje_deducible": 0.33,
+      "tope_anual": null,
+      "tooltip": "Se deduce el 33% del impuesto a débitos/créditos bancarios pagado. Sin tope."
+    },
+    "indumentaria_laboral": {
+      "nombre": "Indumentaria Laboral",
+      "descripcion": "Indumentaria de uso exclusivo laboral sin reintegro del empleador",
+      "porcentaje_deducible": 1.0,
+      "tope_anual": null,
+      "nota": "Sin tope específico, debe ser uso exclusivo",
+      "tooltip": "100% de indumentaria de uso exclusivo laboral sin reintegro. Sin tope específico."
+    }
+  },
+  "descuentos_obligatorios": {
+    "jubilacion": 0.11,
+    "obra_social": 0.03,
+    "ley_19032": 0.03,
+    "total": 0.17
+  },
+  "notas": [
+    "Los topes se aplican sobre el período anual",
+    "Medicina prepaga y gastos médicos comparten el tope del 5%",
+    "Las deducciones se actualizan semestralmente (enero y julio)",
+    "El cálculo es mensual pero acumulativo durante el año",
+    "Límite de retención mensual: 35% del bruto"
+  ]
+}

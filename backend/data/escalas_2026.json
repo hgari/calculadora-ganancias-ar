@@ -1,0 +1,76 @@
+{
+  "año": 2026,
+  "periodo": "Enero-Junio 2026",
+  "descripcion": "Escalas progresivas oficiales Art. 94 - Estimadas para 2026 (se actualizan mensualmente con IPC)",
+  "escalas": [
+    {
+      "desde": 0,
+      "hasta": 1698000,
+      "porcentaje": 0.05,
+      "fijo": 0,
+      "descripcion": "Primer tramo"
+    },
+    {
+      "desde": 1698000,
+      "hasta": 3396000,
+      "porcentaje": 0.09,
+      "fijo": 84900,
+      "descripcion": "Segundo tramo"
+    },
+    {
+      "desde": 3396000,
+      "hasta": 5094000,
+      "porcentaje": 0.12,
+      "fijo": 237720,
+      "descripcion": "Tercer tramo"
+    },
+    {
+      "desde": 5094000,
+      "hasta": 6792000,
+      "porcentaje": 0.15,
+      "fijo": 441480,
+      "descripcion": "Cuarto tramo"
+    },
+    {
+      "desde": 6792000,
+      "hasta": 10176000,
+      "porcentaje": 0.19,
+      "fijo": 696180,
+      "descripcion": "Quinto tramo"
+    },
+    {
+      "desde": 10176000,
+      "hasta": 16956000,
+      "porcentaje": 0.23,
+      "fijo": 1339140,
+      "descripcion": "Sexto tramo"
+    },
+    {
+      "desde": 16956000,
+      "hasta": 25434000,
+      "porcentaje": 0.27,
+      "fijo": 2898540,
+      "descripcion": "Séptimo tramo"
+    },
+    {
+      "desde": 25434000,
+      "hasta": 33912000,
+      "porcentaje": 0.31,
+      "fijo": 5187600,
+      "descripcion": "Octavo tramo"
+    },
+    {
+      "desde": 33912000,
+      "hasta": null,
+      "porcentaje": 0.35,
+      "fijo": 7815780,
+      "descripcion": "Último tramo"
+    }
+  ],
+  "notas": [
+    "Las escalas se actualizan mensualmente según IPC",
+    "Estos son valores estimados para el primer mes de 2026",
+    "La retención mensual no puede superar el 35% del sueldo bruto",
+    "Los montos mostrados son anuales"
+  ]
+}
