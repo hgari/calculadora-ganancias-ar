@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = API_CONFIG?.API_URL || 'http://localhost:8000';
 let deduccionesConfig = {};
 
 // Mapeo de deducciones del HTML al JSON del backend
