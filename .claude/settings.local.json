@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(chmod:*)",
-      "Bash(move /Y:*)"
+      "Bash(move /Y:*)",
+      "Bash(python main.py:*)",
+      "Bash(pip install:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ]
   }
 }

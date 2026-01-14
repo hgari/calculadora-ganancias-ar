@@ -37,8 +37,8 @@
                     </div>
 
                     <div class="form-group">
-                        <h3>Deducciones Opcionales</h3>
-                        <p class="info-text">Seleccioná las deducciones que correspondan según la Ley de Ganancias (Art. 94). Los topes son anuales.</p>
+                        <h3>Deducciones Opcionales del Mes Actual</h3>
+                        <p class="info-text">Ingresá las deducciones que correspondan <strong>para el mes actual</strong> según la Ley de Ganancias (Art. 94). Los topes son anuales.</p>
 
                         <!-- 1. Indumentaria Laboral / Equipamiento -->
                         <div class="deduccion-predefinida">
@@ -218,6 +218,60 @@
                         </div>
                     </div>
 
+                    <!-- Meses Anteriores del Año (F.572) -->
+                    <div class="form-group">
+                        <h3>Meses Anteriores del Año (Opcional)</h3>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="tieneMesesAnteriores">
+                            <span>Tengo meses trabajados anteriores en el año y quiero ver proyección anual</span>
+                        </label>
+
+                        <div id="mesesAnterioresContainer" class="meses-anteriores-container hidden">
+                            <!-- Opción para cargar F.572 -->
+                            <div class="upload-f572-section">
+                                <h4>📄 Cargar Deducciones desde F.572 (PDF) - Opcional</h4>
+                                <p class="info-text-small">Subí tu declaración F.572 en PDF para cargar automáticamente el <strong>total de deducciones opcionales del año</strong>. Los ingresos brutos siempre se ingresan manualmente.</p>
+
+                                <div class="upload-container">
+                                    <input type="file" id="fileF572" accept=".pdf" style="display: none;">
+                                    <button type="button" class="btn-upload" onclick="document.getElementById('fileF572').click()">
+                                        📤 Seleccionar F.572 (PDF)
+                                    </button>
+                                    <span id="fileName" class="file-name"></span>
+                                </div>
+
+                                <div id="uploadStatus" class="upload-status hidden"></div>
+                                <div id="topesAplicados" class="topes-aplicados hidden"></div>
+                            </div>
+
+                            <div class="separator-or">
+                                <span>Datos Acumulados del Año</span>
+                            </div>
+
+                            <p class="info-text"><strong>Instrucciones:</strong> Ingresá los totales acumulados de meses anteriores. Las deducciones opcionales podés cargarlas desde el F.572 o ingresarlas manualmente.</p>
+
+                            <div class="form-group-inline">
+                                <div class="campo-acumulado">
+                                    <label for="ingresosAcumulados">Ingresos Brutos Acumulados ($) <span class="obligatorio">*</span></label>
+                                    <input type="number" id="ingresosAcumulados" placeholder="Ej: 5000000" min="0" step="0.01">
+                                    <small class="info-text-small">Suma de todos los sueldos brutos de meses anteriores</small>
+                                </div>
+
+                                <div class="campo-acumulado">
+                                    <label for="deduccionesAcumuladas">Deducciones Opcionales Acumuladas ($)</label>
+                                    <input type="number" id="deduccionesAcumuladas" placeholder="Ej: 450000" min="0" step="0.01">
+                                    <small class="info-text-small">Total de deducciones opcionales ya aplicadas (se carga desde F.572 o manual)</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="impuestoRetenidoAcumulado">Impuesto Ya Retenido Acumulado ($)</label>
+                                <input type="number" id="impuestoRetenidoAcumulado" placeholder="Ej: 125000" min="0" step="0.01">
+                                <small class="info-text-small">Total de impuesto a las ganancias ya retenido en recibos de meses anteriores (opcional, mejora la precisión)</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn-primary">Calcular Impuesto</button>
                 </form>
             </section>
@@ -249,6 +303,45 @@
                     </div>
                 </div>
 
+                <!-- Proyección Anual (solo si hay meses anteriores) -->
+                <div id="proyeccionAnualSection" class="proyeccion-anual-section hidden">
+                    <h2 class="seccion-title">Proyección Anual Completa</h2>
+
+                    <div class="proyeccion-cards">
+                        <div class="proyeccion-card">
+                            <h4>Impuesto Anual Real</h4>
+                            <div class="proyeccion-valor" id="resImpuestoAnualReal">$0</div>
+                            <small>Basado en ingresos del año completo</small>
+                        </div>
+
+                        <div class="proyeccion-card">
+                            <h4>Ya Retenido (Estimado)</h4>
+                            <div class="proyeccion-valor" id="resImpuestoYaRetenido">$0</div>
+                            <small>Retenciones de meses anteriores</small>
+                        </div>
+
+                        <div class="proyeccion-card diferencia-card" id="diferenciaCard">
+                            <h4>Diferencia</h4>
+                            <div class="proyeccion-valor grande" id="resDiferencia">$0</div>
+                            <div class="diferencia-tipo" id="resDiferenciaTipo"></div>
+                        </div>
+                    </div>
+
+                    <div class="sugerencia-ajuste-card">
+                        <h4>Sugerencia para los <span id="mesesRestantes">0</span> meses restantes:</h4>
+                        <div class="sugerencia-content">
+                            <div class="sugerencia-item">
+                                <span class="label">Retención mensual sugerida:</span>
+                                <span class="valor destacado" id="resRetencionSugerida">$0</span>
+                            </div>
+                            <div class="sugerencia-item">
+                                <span class="label">Retención actual:</span>
+                                <span class="valor" id="resRetencionActual">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="detalle-accordion">
                     <button class="accordion" onclick="toggleAccordion(this)">
                         <span>Deducciones Personales</span>
@@ -276,6 +369,17 @@
                     </button>
                     <div class="panel">
                         <div id="detalleEscalas"></div>
+                    </div>
+                </div>
+
+                <!-- Resumen Mes por Mes (solo si hay meses anteriores) -->
+                <div class="detalle-accordion" id="resumenMensualSection" style="display: none;">
+                    <button class="accordion" onclick="toggleAccordion(this)">
+                        <span>Resumen Mes por Mes</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="panel">
+                        <div id="detalleResumenMensual"></div>
                     </div>
                 </div>
 

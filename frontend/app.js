@@ -321,6 +321,309 @@ function formatCurrency(value) {
     }).format(value);
 }
 
+// ===== NUEVA FUNCIONALIDAD: Meses Anteriores =====
+
+const MESES_NOMBRES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+// Toggle de meses anteriores
+document.addEventListener('DOMContentLoaded', () => {
+    const checkboxMesesAnteriores = document.getElementById('tieneMesesAnteriores');
+    const container = document.getElementById('mesesAnterioresContainer');
+
+    if (checkboxMesesAnteriores) {
+        checkboxMesesAnteriores.addEventListener('change', function() {
+            if (this.checked) {
+                container.classList.remove('hidden');
+                // No necesitamos generar tabla, solo mostrar los campos
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+    }
+
+    // Configurar evento de carga de archivo F.572
+    const fileInput = document.getElementById('fileF572');
+    if (fileInput) {
+        fileInput.addEventListener('change', handleF572Upload);
+    }
+});
+
+// Ya no necesitamos generar tabla mensual
+// function generarTablaMeses() { ... } - REMOVED
+
+function recolectarDatosAcumulados() {
+    const checkboxMesesAnteriores = document.getElementById('tieneMesesAnteriores');
+
+    if (!checkboxMesesAnteriores || !checkboxMesesAnteriores.checked) {
+        return null;
+    }
+
+    const ingresosAcumulados = parseFloat(document.getElementById('ingresosAcumulados')?.value || 0);
+    const deduccionesAcumuladas = parseFloat(document.getElementById('deduccionesAcumuladas')?.value || 0);
+    const impuestoRetenidoAcumulado = parseFloat(document.getElementById('impuestoRetenidoAcumulado')?.value || 0);
+
+    if (ingresosAcumulados <= 0) {
+        return null;
+    }
+
+    return {
+        ingresos_acumulados: ingresosAcumulados,
+        deducciones_acumuladas: deduccionesAcumuladas,
+        impuesto_retenido_acumulado: impuestoRetenidoAcumulado
+    };
+}
+
+async function calcularConDatosAcumulados() {
+    const sueldoBruto = parseFloat(document.getElementById('sueldoBruto').value);
+    const estadoCivil = document.getElementById('estadoCivil').value;
+    const cantidadHijos = parseInt(document.getElementById('cantidadHijos').value);
+
+    const deduccionesOpcionales = [];
+
+    // Procesar cada deducción marcada (código existente)
+    for (const [htmlId, configKey] of Object.entries(DEDUCCION_MAPPING)) {
+        const checkbox = document.getElementById(`ded${htmlId}`);
+        if (checkbox && checkbox.checked) {
+            const input = document.getElementById(`monto${htmlId}`);
+            const monto = parseFloat(input.value);
+
+            if (monto > 0) {
+                const deduccionConfig = deduccionesConfig.deducciones_opcionales[configKey];
+                const nombre = deduccionConfig ? deduccionConfig.nombre : htmlId;
+
+                deduccionesOpcionales.push({
+                    concepto: nombre,
+                    monto: monto,
+                    tipo: configKey
+                });
+            }
+        }
+    }
+
+    const datosAcumulados = recolectarDatosAcumulados();
+    const mesActualNumero = new Date().getMonth() + 1;
+
+    const requestData = {
+        mes_actual: {
+            sueldo_bruto: sueldoBruto,
+            estado_civil: estadoCivil,
+            cantidad_hijos: cantidadHijos,
+            deducciones_opcionales: deduccionesOpcionales
+        },
+        datos_acumulados: datosAcumulados,
+        mes_actual_numero: mesActualNumero
+    };
+
+    try {
+        const response = await fetch(`${API_URL}/calcular-anual`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+
+        const resultado = await response.json();
+        mostrarResultadosAnuales(resultado);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al calcular. Asegúrate de que el servidor esté ejecutándose en ' + API_URL);
+    }
+}
+
+function mostrarResultadosAnuales(data) {
+    // Mostrar resultados del mes actual (reutilizar función existente)
+    mostrarResultados(data.calculo_mes_actual);
+
+    // Mostrar proyección anual
+    const proyeccionSection = document.getElementById('proyeccionAnualSection');
+    proyeccionSection.classList.remove('hidden');
+
+    document.getElementById('resImpuestoAnualReal').textContent = formatCurrency(data.impuesto_anual_real);
+    document.getElementById('resImpuestoYaRetenido').textContent = formatCurrency(data.impuesto_ya_retenido_estimado);
+    document.getElementById('resDiferencia').textContent = formatCurrency(Math.abs(data.diferencia));
+
+    // Configurar colores según el tipo de diferencia
+    const diferenciaCard = document.getElementById('diferenciaCard');
+    const diferenciaTipo = document.getElementById('resDiferenciaTipo');
+
+    diferenciaCard.classList.remove('a-favor', 'en-contra');
+    diferenciaTipo.classList.remove('a-favor', 'en-contra');
+
+    if (data.diferencia_tipo === 'a_favor') {
+        diferenciaCard.classList.add('a-favor');
+        diferenciaTipo.classList.add('a-favor');
+        diferenciaTipo.textContent = `A tu favor (+${data.diferencia_porcentual.toFixed(1)}%)`;
+    } else if (data.diferencia_tipo === 'en_contra') {
+        diferenciaCard.classList.add('en-contra');
+        diferenciaTipo.classList.add('en-contra');
+        diferenciaTipo.textContent = `En contra (${data.diferencia_porcentual.toFixed(1)}%)`;
+    } else {
+        diferenciaTipo.textContent = 'Equilibrado';
+    }
+
+    // Sugerencia de ajuste
+    document.getElementById('mesesRestantes').textContent = data.meses_restantes;
+    document.getElementById('resRetencionSugerida').textContent = formatCurrency(data.retencion_mensual_sugerida);
+    document.getElementById('resRetencionActual').textContent = formatCurrency(data.retencion_mensual_actual);
+
+    // Resumen mensual
+    mostrarResumenMensual(data.resumen_mensual);
+}
+
+function mostrarResumenMensual(resumen) {
+    const section = document.getElementById('resumenMensualSection');
+    const container = document.getElementById('detalleResumenMensual');
+
+    section.style.display = 'block';
+    container.innerHTML = '';
+
+    resumen.forEach(mes => {
+        const div = document.createElement('div');
+        div.className = `mes-item ${mes.tipo}`;
+
+        let mesNombre = mes.mes;
+        if (mes.tipo === 'actual') {
+            mesNombre = 'Mes Actual';
+        } else if (mes.tipo === 'proyectado') {
+            mesNombre = 'Proyección';
+        } else {
+            mesNombre = mes.mes.charAt(0).toUpperCase() + mes.mes.slice(1);
+        }
+
+        div.innerHTML = `
+            <span class="mes-nombre">${mesNombre}</span>
+            <span class="mes-datos">
+                Ganancia: ${formatCurrency(mes.ganancia_neta_sujeta)} →
+                Impuesto: ${formatCurrency(mes.impuesto_estimado)}
+            </span>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Modificar el submit del formulario para detectar si hay datos acumulados
+const formulario = document.getElementById('calculatorForm');
+formulario.removeEventListener('submit', calcularGanancias); // Remover listener anterior
+
+formulario.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const datosAcumulados = recolectarDatosAcumulados();
+
+    if (datosAcumulados) {
+        await calcularConDatosAcumulados();
+    } else {
+        await calcularGanancias();
+        // Ocultar secciones de proyección anual si no hay datos acumulados
+        const proyeccionSection = document.getElementById('proyeccionAnualSection');
+        const resumenSection = document.getElementById('resumenMensualSection');
+        if (proyeccionSection) proyeccionSection.classList.add('hidden');
+        if (resumenSection) resumenSection.style.display = 'none';
+    }
+});
+
+// ===== Manejo de Upload F.572 =====
+
+async function handleF572Upload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Mostrar nombre del archivo
+    document.getElementById('fileName').textContent = file.name;
+
+    // Mostrar estado de carga
+    const uploadStatus = document.getElementById('uploadStatus');
+    uploadStatus.className = 'upload-status loading';
+    uploadStatus.textContent = 'Procesando PDF...';
+    uploadStatus.classList.remove('hidden');
+
+    // Ocultar topes aplicados anteriores
+    document.getElementById('topesAplicados').classList.add('hidden');
+
+    try {
+        // Crear FormData y enviar al backend
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('http://localhost:8000/upload-f572', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Error al procesar el PDF');
+        }
+
+        const data = await response.json();
+
+        // Cargar las deducciones totales en el campo acumulado
+        cargarDeduccionesAcumuladas(data.deducciones_con_topes);
+
+        // Mostrar éxito
+        uploadStatus.className = 'upload-status success';
+        const totalDeducciones = Object.values(data.deducciones_con_topes).reduce((sum, val) => sum + val, 0);
+        uploadStatus.textContent = `✓ PDF procesado correctamente. Total deducciones: ${formatCurrency(totalDeducciones)}`;
+
+        // Mostrar advertencia si los topes fueron excedidos
+        if (data.topes_aplicados && data.topes_aplicados.length > 0) {
+            mostrarTopesAplicados(data.topes_aplicados);
+        }
+
+    } catch (error) {
+        uploadStatus.className = 'upload-status error';
+        uploadStatus.textContent = `✗ Error: ${error.message}`;
+        console.error('Error al procesar F.572:', error);
+    }
+}
+
+function cargarDeduccionesAcumuladas(deduccionesConTopes) {
+    // Sumar todas las deducciones del F.572
+    const totalDeducciones = Object.values(deduccionesConTopes).reduce((sum, val) => sum + val, 0);
+
+    // Cargar en el campo de deducciones acumuladas
+    const deduccionesInput = document.getElementById('deduccionesAcumuladas');
+    if (deduccionesInput) {
+        deduccionesInput.value = totalDeducciones.toFixed(2);
+    }
+}
+
+function mostrarTopesAplicados(topesAplicados) {
+    const container = document.getElementById('topesAplicados');
+
+    // Mapeo de tipos de deducciones a nombres legibles
+    const nombresDeduccion = {
+        'prepaga': 'Cuotas Médico Asistenciales',
+        'seguro_vida': 'Seguro de Vida',
+        'indumentaria': 'Indumentaria y Equipamiento',
+        'educacion': 'Gastos de Educación',
+        'alquiler': 'Alquileres',
+        'servicio_domestico': 'Servicio Doméstico',
+        'credito_hipotecario': 'Intereses Hipotecarios'
+    };
+
+    let html = '<h5>⚠ Información sobre deducciones del F.572:</h5>';
+    html += '<p class="info-text-small">Las siguientes deducciones excedían el límite anual en el F.572. Esta información es solo referencial - <strong>no se cargan automáticamente en el formulario</strong>.</p>';
+    html += '<ul>';
+
+    topesAplicados.forEach(tope => {
+        const nombre = nombresDeduccion[tope.tipo] || tope.tipo;
+        html += `<li><strong>${nombre}:</strong> Declarado en F.572: ${formatCurrency(tope.monto_original)} | Tope legal: ${formatCurrency(tope.monto_con_tope)} | Exceso: ${formatCurrency(tope.diferencia)}</li>`;
+    });
+
+    html += '</ul>';
+    html += '<p class="info-text-small"><strong>Recordá:</strong> Ingresá manualmente las deducciones del mes actual en el formulario de arriba.</p>';
+
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+}
+
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const panels = document.querySelectorAll('.panel');
