@@ -31,6 +31,7 @@ class CalculoRequest(BaseModel):
     sueldo_bruto: float
     estado_civil: str  # "soltero", "casado"
     cantidad_hijos: int
+    otras_cargas: Optional[int] = 0  # Otras personas a cargo (padres, hermanos, etc.)
     deducciones_opcionales: Optional[List[DeduccionOpcional]] = []
 
 
@@ -61,7 +62,8 @@ async def calcular_ganancias(request: CalculoRequest):
         sueldo_bruto=request.sueldo_bruto,
         estado_civil=request.estado_civil,
         cantidad_hijos=request.cantidad_hijos,
-        deducciones_opcionales=request.deducciones_opcionales
+        deducciones_opcionales=request.deducciones_opcionales,
+        otras_cargas=request.otras_cargas
     )
     return resultado
 

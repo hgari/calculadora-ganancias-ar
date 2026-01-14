@@ -13,6 +13,9 @@
   "hijo_anual": 2078148,
   "hijo_incapacitado_mensual": 346358,
   "hijo_incapacitado_anual": 4156296,
+  "otras_cargas_mensual": 173179,
+  "otras_cargas_anual": 2078148,
+  "otras_cargas_requisito_ingreso_maximo": 4375752,
   "deducciones_opcionales": {
     "alquiler_inquilino": {
       "nombre": "Alquiler de vivienda (inquilino)",

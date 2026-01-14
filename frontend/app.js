@@ -133,6 +133,7 @@ async function calcularGanancias() {
     const sueldoBruto = parseFloat(document.getElementById('sueldoBruto').value);
     const estadoCivil = document.getElementById('estadoCivil').value;
     const cantidadHijos = parseInt(document.getElementById('cantidadHijos').value);
+    const otrasCargas = parseInt(document.getElementById('otrasCargas').value || 0);
 
     const deduccionesOpcionales = [];
 
@@ -160,6 +161,7 @@ async function calcularGanancias() {
         sueldo_bruto: sueldoBruto,
         estado_civil: estadoCivil,
         cantidad_hijos: cantidadHijos,
+        otras_cargas: otrasCargas,
         deducciones_opcionales: deduccionesOpcionales
     };
 
@@ -221,12 +223,14 @@ function mostrarDeducciones(deducciones) {
         { label: 'Deducción Especial (mensual)', valor: deducciones.deduccion_especial_mensual || deducciones.deduccion_especial },
         { label: 'Cónyuge (mensual)', valor: deducciones.conyuge_mensual || deducciones.conyuge },
         { label: 'Hijos (mensual)', valor: deducciones.hijos_mensual || deducciones.hijos },
+        { label: 'Otras Personas a Cargo (mensual)', valor: deducciones.otras_cargas_mensual || 0 },
         { label: 'Total Mensual', valor: deducciones.total_mensual }
     ];
 
     items.forEach(item => {
         if (item.label.includes('Cónyuge') && item.valor === 0) return;
         if (item.label.includes('Hijos') && item.valor === 0) return;
+        if (item.label.includes('Otras Personas') && item.valor === 0) return;
 
         const div = document.createElement('div');
         div.className = 'detalle-item';
@@ -378,6 +382,7 @@ async function calcularConDatosAcumulados() {
     const sueldoBruto = parseFloat(document.getElementById('sueldoBruto').value);
     const estadoCivil = document.getElementById('estadoCivil').value;
     const cantidadHijos = parseInt(document.getElementById('cantidadHijos').value);
+    const otrasCargas = parseInt(document.getElementById('otrasCargas').value || 0);
 
     const deduccionesOpcionales = [];
 
@@ -409,6 +414,7 @@ async function calcularConDatosAcumulados() {
             sueldo_bruto: sueldoBruto,
             estado_civil: estadoCivil,
             cantidad_hijos: cantidadHijos,
+            otras_cargas: otrasCargas,
             deducciones_opcionales: deduccionesOpcionales
         },
         datos_acumulados: datosAcumulados,

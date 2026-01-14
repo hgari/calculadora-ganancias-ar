@@ -40,7 +40,7 @@ class CalculadoraGanancias:
         descuentos["total"] = round(sueldo_bruto * porcentajes["total"], 2)
         return descuentos
 
-    def calcular_deducciones_personales(self, estado_civil: str, cantidad_hijos: int, hijos_incapacitados: int = 0) -> Dict[str, float]:
+    def calcular_deducciones_personales(self, estado_civil: str, cantidad_hijos: int, hijos_incapacitados: int = 0, otras_cargas: int = 0) -> Dict[str, float]:
         """
         Calcula las deducciones personales (GNI, deducción especial, cargas de familia)
         Valores actualizados para Enero-Junio 2026
@@ -73,12 +73,17 @@ class CalculadoraGanancias:
             hijos_incapacitados * self.deducciones["hijo_incapacitado_anual"]
         )
 
+        # Otras personas a cargo (familiares sin ingresos)
+        deducciones_calc["otras_cargas_mensual"] = otras_cargas * self.deducciones.get("otras_cargas_mensual", 0)
+        deducciones_calc["otras_cargas_anual"] = otras_cargas * self.deducciones.get("otras_cargas_anual", 0)
+
         # Total deducciones personales
         total_mensual = (
             deducciones_calc["gni_mensual"] +
             deducciones_calc["deduccion_especial_mensual"] +
             deducciones_calc["conyuge_mensual"] +
-            deducciones_calc["hijos_mensual"]
+            deducciones_calc["hijos_mensual"] +
+            deducciones_calc["otras_cargas_mensual"]
         )
         total_anual = total_mensual * 12
 
@@ -127,7 +132,7 @@ class CalculadoraGanancias:
         }
 
     def calcular(self, sueldo_bruto: float, estado_civil: str, cantidad_hijos: int,
-                 deducciones_opcionales: Optional[List] = None) -> Dict:
+                 deducciones_opcionales: Optional[List] = None, otras_cargas: int = 0) -> Dict:
         """
         Realiza el cálculo completo del impuesto a las ganancias
         """
@@ -141,7 +146,7 @@ class CalculadoraGanancias:
         sueldo_neto = sueldo_bruto - descuentos["total"]
 
         # 3. Calcular deducciones personales
-        deducciones_personales = self.calcular_deducciones_personales(estado_civil, cantidad_hijos)
+        deducciones_personales = self.calcular_deducciones_personales(estado_civil, cantidad_hijos, otras_cargas=otras_cargas)
 
         # 4. Deducciones opcionales (tomar monto mensual tal cual)
         total_deducciones_opcionales = 0
@@ -226,7 +231,8 @@ class CalculadoraGanancias:
             sueldo_bruto=mes_actual["sueldo_bruto"],
             estado_civil=mes_actual["estado_civil"],
             cantidad_hijos=mes_actual["cantidad_hijos"],
-            deducciones_opcionales=mes_actual.get("deducciones_opcionales", [])
+            deducciones_opcionales=mes_actual.get("deducciones_opcionales", []),
+            otras_cargas=mes_actual.get("otras_cargas", 0)
         )
 
         ganancia_neta_actual = calculo_mes_actual["ganancia_neta_sujeta_mensual"]
@@ -248,7 +254,8 @@ class CalculadoraGanancias:
             # Calcular deducciones personales para los meses anteriores
             deducciones_personales = self.calcular_deducciones_personales(
                 estado_civil=mes_actual["estado_civil"],
-                cantidad_hijos=mes_actual["cantidad_hijos"]
+                cantidad_hijos=mes_actual["cantidad_hijos"],
+                otras_cargas=mes_actual.get("otras_cargas", 0)
             )
             deducciones_personales_acumuladas = deducciones_personales["total_mensual"] * meses_anteriores_count
 
@@ -367,7 +374,8 @@ class CalculadoraGanancias:
             sueldo_bruto=mes_actual["sueldo_bruto"],
             estado_civil=mes_actual["estado_civil"],
             cantidad_hijos=mes_actual["cantidad_hijos"],
-            deducciones_opcionales=mes_actual.get("deducciones_opcionales", [])
+            deducciones_opcionales=mes_actual.get("deducciones_opcionales", []),
+            otras_cargas=mes_actual.get("otras_cargas", 0)
         )
 
         ganancia_neta_actual = calculo_mes_actual["ganancia_neta_sujeta_mensual"]
