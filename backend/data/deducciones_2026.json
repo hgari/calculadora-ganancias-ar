@@ -109,7 +109,7 @@
       "tooltip": "Se deduce el 33% del impuesto a débitos/créditos bancarios pagado. Sin tope."
     },
     "indumentaria_laboral": {
-      "nombre": "Indumentaria Laboral",
+      "nombre": "Indumentaria Laboral / Equipamiento",
       "descripcion": "Indumentaria de uso exclusivo laboral sin reintegro del empleador",
       "porcentaje_deducible": 1.0,
       "tope_anual": null,

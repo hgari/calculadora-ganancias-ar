@@ -40,111 +40,35 @@
                         <h3>Deducciones Opcionales</h3>
                         <p class="info-text">Seleccioná las deducciones que correspondan según la Ley de Ganancias (Art. 94). Los topes son anuales.</p>
 
-                        <!-- 1. Alquiler Inquilino -->
+                        <!-- 1. Indumentaria Laboral / Equipamiento -->
                         <div class="deduccion-predefinida">
                             <label>
-                                <input type="checkbox" id="dedAlquilerInquilino" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Alquiler de vivienda (inquilino)</span>
-                                <span class="info-icon" title="Se deduce el 40% del alquiler pagado con contrato registrado. Tope anual $4.375.752">ℹ️</span>
+                                <input type="checkbox" id="dedIndumentariaLaboral" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Indumentaria Laboral / Equipamiento</span>
+                                <span class="info-icon" title="100% de indumentaria de uso exclusivo laboral sin reintegro. Sin tope específico.">ℹ️</span>
                             </label>
-                            <div class="deduccion-input-group hidden" id="groupAlquilerInquilino">
-                                <input type="number" id="montoAlquilerInquilino" placeholder="Monto mensual pagado" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del monto</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeAlquilerInquilino">$0</span></small>
-                                <div class="advertencia hidden" id="advAlquilerInquilino"></div>
+                            <div class="deduccion-input-group hidden" id="groupIndumentariaLaboral">
+                                <input type="number" id="montoIndumentariaLaboral" placeholder="Monto mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>100%</strong> (uso exclusivo laboral)</small>
+                                <small class="deduccion-tope">Sin tope específico</small>
                             </div>
                         </div>
 
-                        <!-- 2. Alquiler RELI -->
+                        <!-- 2. Impuesto Débitos/Créditos -->
                         <div class="deduccion-predefinida">
                             <label>
-                                <input type="checkbox" id="dedAlquilerReli" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Alquiler con RELI</span>
-                                <span class="info-icon" title="10% del alquiler para quienes estén inscriptos en RELI. Sin tope adicional.">ℹ️</span>
+                                <input type="checkbox" id="dedImpuestoDebitoCredito" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Impuesto Débitos/Créditos Bancarios</span>
+                                <span class="info-icon" title="Se deduce el 33% del impuesto a débitos/créditos bancarios pagado. Sin tope.">ℹ️</span>
                             </label>
-                            <div class="deduccion-input-group hidden" id="groupAlquilerReli">
-                                <input type="number" id="montoAlquilerReli" placeholder="Monto mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>10%</strong> del monto</small>
-                                <small class="deduccion-tope">Sin tope adicional</small>
+                            <div class="deduccion-input-group hidden" id="groupImpuestoDebitoCredito">
+                                <input type="number" id="montoImpuestoDebitoCredito" placeholder="Impuesto mensual pagado" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>33%</strong> del impuesto pagado</small>
+                                <small class="deduccion-tope">Sin tope</small>
                             </div>
                         </div>
 
-                        <!-- 3. Medicina Prepaga -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedMedicinaPrepaga" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Medicina Prepaga / Obra Social</span>
-                                <span class="info-icon" title="100% de la cuota de prepaga. Tope conjunto con gastos médicos: 5% de la ganancia neta anual.">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupMedicinaPrepaga">
-                                <input type="number" id="montoMedicinaPrepaga" placeholder="Cuota mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la cuota</small>
-                                <small class="deduccion-tope">Tope: <strong>5%</strong> de ganancia neta anual (compartido con gastos médicos)</small>
-                                <div class="advertencia hidden" id="advMedicinaPrepaga"></div>
-                            </div>
-                        </div>
-
-                        <!-- 4. Gastos Médicos -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedGastosMedicos" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Gastos Médicos (honorarios)</span>
-                                <span class="info-icon" title="40% de honorarios médicos sin reintegro. Excluye medicamentos. Tope conjunto con prepaga: 5% de ganancia neta anual.">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupGastosMedicos">
-                                <input type="number" id="montoGastosMedicos" placeholder="Monto mensual facturado" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del monto. NO incluye medicamentos</small>
-                                <small class="deduccion-tope">Tope: <strong>5%</strong> de ganancia neta anual (compartido con prepaga)</small>
-                                <div class="advertencia hidden" id="advGastosMedicos"></div>
-                            </div>
-                        </div>
-
-                        <!-- 5. Seguro de Vida -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedSeguroVida" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Seguros de Vida</span>
-                                <span class="info-icon" title="100% de primas de seguro de vida. Tope anual: $641.000 (independiente del seguro de retiro).">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupSeguroVida">
-                                <input type="number" id="montoSeguroVida" placeholder="Prima mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la prima</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeSeguroVida">$0</span></small>
-                                <div class="advertencia hidden" id="advSeguroVida"></div>
-                            </div>
-                        </div>
-
-                        <!-- 6. Seguro de Retiro -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedSeguroRetiro" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Seguros de Retiro Privados</span>
-                                <span class="info-icon" title="100% de primas de seguro de retiro. Tope anual: $641.000 (independiente del seguro de vida).">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupSeguroRetiro">
-                                <input type="number" id="montoSeguroRetiro" placeholder="Prima mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la prima</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeSeguroRetiro">$0</span> (independiente)</small>
-                                <div class="advertencia hidden" id="advSeguroRetiro"></div>
-                            </div>
-                        </div>
-
-                        <!-- 7. Gastos Educativos -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedGastosEducativos" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Gastos Educativos</span>
-                                <span class="info-icon" title="40% de gastos educativos (cuotas, transporte, comedor, útiles, uniformes) de hijos < 24 años. Tope anual: $1.750.301">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupGastosEducativos">
-                                <input type="number" id="montoGastosEducativos" placeholder="Monto mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del gasto (hijos menores de 24 años)</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeGastosEducativos">$0</span></small>
-                                <div class="advertencia hidden" id="advGastosEducativos"></div>
-                            </div>
-                        </div>
-
-                        <!-- 8. Servicio Doméstico -->
+                        <!-- 3. Servicio Doméstico -->
                         <div class="deduccion-predefinida">
                             <label>
                                 <input type="checkbox" id="dedServicioDomestico" class="deduccion-checkbox">
@@ -159,18 +83,93 @@
                             </div>
                         </div>
 
-                        <!-- 9. Intereses Hipotecarios -->
+                        <!-- 4. Alquiler Inquilino -->
                         <div class="deduccion-predefinida">
                             <label>
-                                <input type="checkbox" id="dedInteresesHipotecarios" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Intereses Hipotecarios</span>
-                                <span class="info-icon" title="100% de intereses hipotecarios de casa habitación. Tope anual: $20.000 (congelado).">ℹ️</span>
+                                <input type="checkbox" id="dedAlquilerInquilino" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Alquiler de vivienda (inquilino)</span>
+                                <span class="info-icon" title="Se deduce el 40% del alquiler pagado con contrato registrado. Tope anual $4.375.752">ℹ️</span>
                             </label>
-                            <div class="deduccion-input-group hidden" id="groupInteresesHipotecarios">
-                                <input type="number" id="montoInteresesHipotecarios" placeholder="Intereses mensuales" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> (solo casa habitación)</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeInteresesHipotecarios">$0</span> (congelado)</small>
-                                <div class="advertencia hidden" id="advInteresesHipotecarios"></div>
+                            <div class="deduccion-input-group hidden" id="groupAlquilerInquilino">
+                                <input type="number" id="montoAlquilerInquilino" placeholder="Monto mensual pagado" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del monto</small>
+                                <small class="deduccion-tope">Tope anual: <span id="topeAlquilerInquilino">$0</span></small>
+                                <div class="advertencia hidden" id="advAlquilerInquilino"></div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Gastos Educativos -->
+                        <div class="deduccion-predefinida">
+                            <label>
+                                <input type="checkbox" id="dedGastosEducativos" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Gastos Educativos</span>
+                                <span class="info-icon" title="40% de gastos educativos (cuotas, transporte, comedor, útiles, uniformes) de hijos < 24 años. Tope anual: $1.750.301">ℹ️</span>
+                            </label>
+                            <div class="deduccion-input-group hidden" id="groupGastosEducativos">
+                                <input type="number" id="montoGastosEducativos" placeholder="Monto mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del gasto (hijos menores de 24 años)</small>
+                                <small class="deduccion-tope">Tope anual: <span id="topeGastosEducativos">$0</span></small>
+                                <div class="advertencia hidden" id="advGastosEducativos"></div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Seguro de Vida -->
+                        <div class="deduccion-predefinida">
+                            <label>
+                                <input type="checkbox" id="dedSeguroVida" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Seguros de Vida</span>
+                                <span class="info-icon" title="100% de primas de seguro de vida. Tope anual: $641.000 (independiente del seguro de retiro).">ℹ️</span>
+                            </label>
+                            <div class="deduccion-input-group hidden" id="groupSeguroVida">
+                                <input type="number" id="montoSeguroVida" placeholder="Prima mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la prima</small>
+                                <small class="deduccion-tope">Tope anual: <span id="topeSeguroVida">$0</span></small>
+                                <div class="advertencia hidden" id="advSeguroVida"></div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Seguro de Retiro -->
+                        <div class="deduccion-predefinida">
+                            <label>
+                                <input type="checkbox" id="dedSeguroRetiro" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Seguros de Retiro Privados</span>
+                                <span class="info-icon" title="100% de primas de seguro de retiro. Tope anual: $641.000 (independiente del seguro de vida).">ℹ️</span>
+                            </label>
+                            <div class="deduccion-input-group hidden" id="groupSeguroRetiro">
+                                <input type="number" id="montoSeguroRetiro" placeholder="Prima mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la prima</small>
+                                <small class="deduccion-tope">Tope anual: <span id="topeSeguroRetiro">$0</span> (independiente)</small>
+                                <div class="advertencia hidden" id="advSeguroRetiro"></div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Medicina Prepaga -->
+                        <div class="deduccion-predefinida">
+                            <label>
+                                <input type="checkbox" id="dedMedicinaPrepaga" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Medicina Prepaga / Obra Social</span>
+                                <span class="info-icon" title="100% de la cuota de prepaga. Tope conjunto con gastos médicos: 5% de la ganancia neta anual.">ℹ️</span>
+                            </label>
+                            <div class="deduccion-input-group hidden" id="groupMedicinaPrepaga">
+                                <input type="number" id="montoMedicinaPrepaga" placeholder="Cuota mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>100%</strong> de la cuota</small>
+                                <small class="deduccion-tope">Tope: <strong>5%</strong> de ganancia neta anual (compartido con gastos médicos)</small>
+                                <div class="advertencia hidden" id="advMedicinaPrepaga"></div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Gastos Médicos -->
+                        <div class="deduccion-predefinida">
+                            <label>
+                                <input type="checkbox" id="dedGastosMedicos" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Gastos Médicos (honorarios)</span>
+                                <span class="info-icon" title="40% de honorarios médicos sin reintegro. Excluye medicamentos. Tope conjunto con prepaga: 5% de ganancia neta anual.">ℹ️</span>
+                            </label>
+                            <div class="deduccion-input-group hidden" id="groupGastosMedicos">
+                                <input type="number" id="montoGastosMedicos" placeholder="Monto mensual facturado" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>40%</strong> del monto. NO incluye medicamentos</small>
+                                <small class="deduccion-tope">Tope: <strong>5%</strong> de ganancia neta anual (compartido con prepaga)</small>
+                                <div class="advertencia hidden" id="advGastosMedicos"></div>
                             </div>
                         </div>
 
@@ -189,46 +188,32 @@
                             </div>
                         </div>
 
-                        <!-- 11. Gastos de Sepelio -->
+                        <!-- 11. Intereses Hipotecarios -->
                         <div class="deduccion-predefinida">
                             <label>
-                                <input type="checkbox" id="dedGastosSepelio" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Gastos de Sepelio</span>
-                                <span class="info-icon" title="100% de gastos de sepelio. Tope anual: $996 (congelado).">ℹ️</span>
+                                <input type="checkbox" id="dedInteresesHipotecarios" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Intereses Hipotecarios</span>
+                                <span class="info-icon" title="100% de intereses hipotecarios de casa habitación. Tope anual: $20.000 (congelado).">ℹ️</span>
                             </label>
-                            <div class="deduccion-input-group hidden" id="groupGastosSepelio">
-                                <input type="number" id="montoGastosSepelio" placeholder="Monto anual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> del gasto</small>
-                                <small class="deduccion-tope">Tope anual: <span id="topeGastosSepelio">$0</span> (congelado)</small>
-                                <div class="advertencia hidden" id="advGastosSepelio"></div>
+                            <div class="deduccion-input-group hidden" id="groupInteresesHipotecarios">
+                                <input type="number" id="montoInteresesHipotecarios" placeholder="Intereses mensuales" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>100%</strong> (solo casa habitación)</small>
+                                <small class="deduccion-tope">Tope anual: <span id="topeInteresesHipotecarios">$0</span> (congelado)</small>
+                                <div class="advertencia hidden" id="advInteresesHipotecarios"></div>
                             </div>
                         </div>
 
-                        <!-- 12. Impuesto Débitos/Créditos -->
+                        <!-- 12. Alquiler con RELI -->
                         <div class="deduccion-predefinida">
                             <label>
-                                <input type="checkbox" id="dedImpuestoDebitoCredito" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Impuesto Débitos/Créditos Bancarios</span>
-                                <span class="info-icon" title="Se deduce el 33% del impuesto a débitos/créditos bancarios pagado. Sin tope.">ℹ️</span>
+                                <input type="checkbox" id="dedAlquilerReli" class="deduccion-checkbox">
+                                <span class="deduccion-nombre">Alquiler con RELI</span>
+                                <span class="info-icon" title="10% del alquiler para quienes estén inscriptos en RELI. Sin tope adicional.">ℹ️</span>
                             </label>
-                            <div class="deduccion-input-group hidden" id="groupImpuestoDebitoCredito">
-                                <input type="number" id="montoImpuestoDebitoCredito" placeholder="Impuesto mensual pagado" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>33%</strong> del impuesto pagado</small>
-                                <small class="deduccion-tope">Sin tope</small>
-                            </div>
-                        </div>
-
-                        <!-- 13. Indumentaria Laboral -->
-                        <div class="deduccion-predefinida">
-                            <label>
-                                <input type="checkbox" id="dedIndumentariaLaboral" class="deduccion-checkbox">
-                                <span class="deduccion-nombre">Indumentaria Laboral</span>
-                                <span class="info-icon" title="100% de indumentaria de uso exclusivo laboral sin reintegro. Sin tope específico.">ℹ️</span>
-                            </label>
-                            <div class="deduccion-input-group hidden" id="groupIndumentariaLaboral">
-                                <input type="number" id="montoIndumentariaLaboral" placeholder="Monto mensual" min="0" step="0.01">
-                                <small class="deduccion-info">Se deduce el <strong>100%</strong> (uso exclusivo laboral)</small>
-                                <small class="deduccion-tope">Sin tope específico</small>
+                            <div class="deduccion-input-group hidden" id="groupAlquilerReli">
+                                <input type="number" id="montoAlquilerReli" placeholder="Monto mensual" min="0" step="0.01">
+                                <small class="deduccion-info">Se deduce el <strong>10%</strong> del monto</small>
+                                <small class="deduccion-tope">Sin tope adicional</small>
                             </div>
                         </div>
                     </div>

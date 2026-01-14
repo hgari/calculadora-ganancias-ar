@@ -20,6 +20,7 @@ calculadora = CalculadoraGanancias()
 class DeduccionOpcional(BaseModel):
     concepto: str
     monto: float
+    tipo: str  # Clave para mapear con deducciones_opcionales en JSON
 
 
 class CalculoRequest(BaseModel):
