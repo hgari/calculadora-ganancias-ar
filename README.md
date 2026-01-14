@@ -356,6 +356,17 @@ Esta calculadora es **orientativa** y los resultados deben ser confirmados con u
 - Existe un límite de retención mensual del 35% del sueldo bruto
 - Las deducciones opcionales requieren documentación respaldatoria (facturas, contratos, etc.)
 
+## Despliegue en la Nube (Gratis)
+
+Querés alojar la aplicación en internet de forma gratuita? Seguí la guía completa en [DEPLOYMENT.md](DEPLOYMENT.md)
+
+**Stack de despliegue recomendado:**
+- Backend: Render.com (Free tier)
+- Frontend: GitHub Pages (Gratis ilimitado)
+- **Costo total: $0/mes**
+
+El despliegue toma ~10 minutos y no requiere tarjeta de crédito.
+
 ## Licencia
 
 MIT
