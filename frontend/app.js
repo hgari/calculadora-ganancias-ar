@@ -630,6 +630,27 @@ function mostrarTopesAplicados(topesAplicados) {
     container.classList.remove('hidden');
 }
 
+// Función para copiar alias de MercadoPago al portapapeles
+function copyAlias() {
+    const alias = 'HGARI.MELI';
+    const btn = document.getElementById('aliasBtn');
+
+    navigator.clipboard.writeText(alias).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg> Copiado!';
+        btn.style.background = '#10b981';
+        btn.style.color = 'white';
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '';
+            btn.style.color = '';
+        }, 2000);
+    }).catch(err => {
+        alert('No se pudo copiar el alias. Copialo manualmente: ' + alias);
+    });
+}
+
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const panels = document.querySelectorAll('.panel');

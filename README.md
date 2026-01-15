@@ -13,7 +13,6 @@ Calculadora web del Impuesto a las Ganancias (Cuarta Categoría) para Argentina,
 
 ## Funcionalidades
 
-- Cálculo automático de descuentos obligatorios (jubilación, obra social, PAMI, Ley 19.032)
 - Deducciones personales (GNI, deducción especial, cónyuge, hijos, otras personas a cargo)
 - **12 deducciones opcionales** (alquiler, prepaga, seguros, educación, servicio doméstico, etc.)
 - Aplicación de escala progresiva del impuesto
