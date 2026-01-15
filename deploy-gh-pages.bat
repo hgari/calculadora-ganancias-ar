@@ -22,7 +22,7 @@ if not "%CURRENT_BRANCH%"=="main" (
 )
 
 REM Verificar que no hay cambios sin commitear
-git diff-index --quiet HEAD --
+git diff-index --quiet HEAD -- 2>nul
 if errorlevel 1 (
     echo [ERROR] Hay cambios sin commitear. Por favor, hace commit primero.
     echo.
@@ -43,43 +43,74 @@ if /i not "%CONFIRM%"=="S" (
 )
 
 echo.
-echo [1/5] Preparando rama gh-pages...
+echo [1/5] Cambiando a rama gh-pages...
 
 REM Verificar si existe la rama gh-pages
 git show-ref --verify --quiet refs/heads/gh-pages
 if errorlevel 1 (
     echo [INFO] Creando rama gh-pages por primera vez...
     git checkout --orphan gh-pages
-    git rm -rf .
-    git checkout main -- frontend/*
 ) else (
-    echo [INFO] Rama gh-pages ya existe, actualizando...
+    echo [INFO] Rama gh-pages ya existe, cambiando...
     git checkout gh-pages
     if errorlevel 1 (
         echo [ERROR] No se pudo cambiar a gh-pages
         pause
         exit /b 1
     )
-    git rm -rf .
-    git checkout main -- frontend/*
+)
+
+REM VERIFICACION CRITICA: Asegurarnos que estamos en gh-pages
+for /f "tokens=*" %%i in ('git branch --show-current') do set VERIFY_BRANCH=%%i
+if not "%VERIFY_BRANCH%"=="gh-pages" (
+    echo [ERROR CRITICO] No estamos en gh-pages! Abortando por seguridad.
+    echo Rama actual: %VERIFY_BRANCH%
+    git checkout main
+    pause
+    exit /b 1
+)
+
+echo [OK] Confirmado: estamos en gh-pages
+echo.
+
+echo [2/5] Limpiando archivos antiguos...
+
+REM Limpiar solo archivos específicos, no todo
+if exist index.html del /f /q index.html
+if exist app.js del /f /q app.js
+if exist style.css del /f /q style.css
+if exist config.js del /f /q config.js
+if exist server.py del /f /q server.py
+if exist .nojekyll del /f /q .nojekyll
+
+echo.
+echo [3/5] Copiando archivos del frontend desde main...
+
+git checkout main -- frontend/
+
+if not exist frontend (
+    echo [ERROR] No se pudo copiar la carpeta frontend
+    git checkout main
+    pause
+    exit /b 1
 )
 
 echo.
-echo [2/5] Moviendo archivos del frontend a la raiz...
+echo [4/5] Moviendo archivos a la raiz...
 
 REM Mover archivos del frontend a la raíz
-if exist frontend (
-    for %%F in (frontend\*) do move "%%F" .
-    for /d %%D in (frontend\*) do move "%%D" .
-    rmdir frontend
-)
+move /Y frontend\*.html . >nul 2>&1
+move /Y frontend\*.js . >nul 2>&1
+move /Y frontend\*.css . >nul 2>&1
+move /Y frontend\*.py . >nul 2>&1
+rmdir frontend
 
-echo.
-echo [3/5] Creando archivo .nojekyll...
+REM Crear .nojekyll
 type nul > .nojekyll
 
 echo.
-echo [4/5] Commiteando cambios...
+echo [5/5] Commiteando y subiendo cambios...
+
 git add .
 
 REM Obtener fecha y hora para el commit
@@ -88,15 +119,18 @@ for /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set TIME=%%a:%%b)
 
 git commit -m "Deploy frontend - %DATE% %TIME%"
 if errorlevel 1 (
-    echo [WARNING] No hay cambios para commitear o hubo un error
+    echo [INFO] No hay cambios nuevos para commitear
+) else (
+    echo [OK] Commit exitoso
 )
 
 echo.
-echo [5/5] Subiendo a GitHub...
-git push origin gh-pages --force
+echo Subiendo a GitHub...
+git push origin gh-pages
 
 if errorlevel 1 (
     echo [ERROR] Hubo un problema al hacer push
+    git checkout main
     pause
     exit /b 1
 )
