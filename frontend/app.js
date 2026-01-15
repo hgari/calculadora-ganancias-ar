@@ -129,6 +129,56 @@ function validarTope(input) {
     }
 }
 
+// Helper para fetch con timeout y mensaje de cold start
+async function fetchWithTimeout(url, options, timeout = 90000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        return response;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('Timeout: El servidor tardó demasiado en responder');
+        }
+        throw error;
+    }
+}
+
+// Mostrar mensaje de "despertando" si es la primera vez
+let isFirstRequest = true;
+function showWakingMessage() {
+    if (!API_URL.includes('render.com')) return null;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'wakingMessage';
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #1e293b;
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 10000;
+        text-align: center;
+        min-width: 300px;
+    `;
+    messageDiv.innerHTML = `
+        <div style="font-size: 1.2rem; margin-bottom: 1rem;">⏳ Servidor despertando...</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">Esto puede tardar 30-60 segundos la primera vez</div>
+    `;
+    document.body.appendChild(messageDiv);
+    return messageDiv;
+}
+
 async function calcularGanancias() {
     const sueldoBruto = parseFloat(document.getElementById('sueldoBruto').value);
     const estadoCivil = document.getElementById('estadoCivil').value;
@@ -165,14 +215,24 @@ async function calcularGanancias() {
         deducciones_opcionales: deduccionesOpcionales
     };
 
+    let wakingMsg = null;
+    if (isFirstRequest) {
+        wakingMsg = showWakingMessage();
+    }
+
     try {
-        const response = await fetch(`${API_URL}/calcular`, {
+        const response = await fetchWithTimeout(`${API_URL}/calcular`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestData)
-        });
+        }, 90000); // 90 segundos de timeout
+
+        if (wakingMsg) {
+            wakingMsg.remove();
+            isFirstRequest = false;
+        }
 
         if (!response.ok) {
             throw new Error('Error en la respuesta del servidor');
@@ -181,8 +241,9 @@ async function calcularGanancias() {
         const resultado = await response.json();
         mostrarResultados(resultado);
     } catch (error) {
+        if (wakingMsg) wakingMsg.remove();
         console.error('Error:', error);
-        alert('Error al calcular. Asegúrate de que el servidor esté ejecutándose en ' + API_URL);
+        alert('Error al calcular: ' + error.message + '\n\nSi el error persiste, el servidor en Render puede estar teniendo problemas. Intentá de nuevo en unos minutos.');
     }
 }
 
