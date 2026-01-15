@@ -6,7 +6,7 @@ const API_CONFIG = {
     // Detectar automáticamente el entorno
     API_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8000'
-        : 'https://calculadora-ganancias-backend.onrender.com'  // Cambiá esto por tu URL de Render
+        : 'https://calculadora-ganancias-ar.onrender.com'
 };
 
 // Si necesitás una URL específica para desarrollo local en red:
